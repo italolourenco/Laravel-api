@@ -1,0 +1,35 @@
+
+# v2 syntax
+version: '3'
+
+# Named volumes
+volumes:
+  # MySQL Data
+  laravel-api-mysql-data:
+    driver: local
+
+services:
+  # MySQL (5.7)
+  mysql:
+    image: ambientum/mysql:5.7
+    container_name: laravel-api-mysql
+    volumes:
+      - laravel-api-mysql-data:/var/lib/mysql
+    ports:
+      - "3306:3306"
+    environment:
+      - MYSQL_ROOT_PASSWORD=laravel-api
+      - MYSQL_DATABASE=laravel-api
+      - MYSQL_USER=laravel-api
+      - MYSQL_PASSWORD=laravel-api
+
+  # PHP (with Caddy)
+  app:
+    image: ambientum/php:7.1-caddy
+    container_name: laravel-api-app
+    volumes:
+      - .:/var/www/app
+    ports:
+      - "80:8080"
+    links:
+      - mysql

@@ -1,0 +1,23 @@
+
+#!/bin/bash
+
+echo Uploading Application container 
+docker-compose up -d
+
+echo Copying the configuration example file
+docker exec -it laravel-api cp .env.example .env
+
+echo Install dependencies
+docker exec -it laravel-api-app composer install
+
+echo Generate key
+docker exec -it laravel-api-app php artisan key:generate
+
+echo Make migrations
+docker exec -it laravel-api-app php artisan migrate
+
+echo Make seeds
+docker exec -it laravel-api-app php artisan db:seed
+
+echo Information of new containers
+docker ps -a 
