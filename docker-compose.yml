@@ -13,6 +13,8 @@ services:
   mysql:
     image: ambientum/mysql:5.7
     container_name: laravel-api-mysql
+    restart: unless-stopped
+    tty: true
     volumes:
       - laravel-api-mysql-data:/var/lib/mysql
     ports:
@@ -22,6 +24,8 @@ services:
       - MYSQL_DATABASE=laravel-api
       - MYSQL_USER=laravel-api
       - MYSQL_PASSWORD=laravel-api
+    networks:
+      - app-network
 
   # PHP (with Caddy)
   app:
@@ -30,6 +34,11 @@ services:
     volumes:
       - .:/var/www/app
     ports:
-      - "80:8080"
-    links:
-      - mysql
+      - "8080:8080"
+    networks:
+      - app-network
+
+  #Docker Networks
+networks:
+  app-network:
+    driver: bridge

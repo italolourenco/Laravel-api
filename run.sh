@@ -5,19 +5,22 @@ echo Uploading Application container
 docker-compose up -d
 
 echo Copying the configuration example file
-docker exec -it laravel-api cp .env.example .env
+winpty docker exec -it laravel-api-app cp .env.example .env
 
 echo Install dependencies
-docker exec -it laravel-api-app composer install
+winpty docker exec -it laravel-api-app composer install
 
 echo Generate key
-docker exec -it laravel-api-app php artisan key:generate
+winpty docker exec -it laravel-api-app php artisan key:generate
 
 echo Make migrations
-docker exec -it laravel-api-app php artisan migrate
+winpty docker exec -it laravel-api-app php artisan migrate
 
 echo Make seeds
-docker exec -it laravel-api-app php artisan db:seed
+winpty docker exec -it laravel-api-app php artisan db:seed
+
+echo run serve
+winpty docker exec -it laravel-api-app php serve --host=0.0.0.0 --port=8000
 
 echo Information of new containers
 docker ps -a 
